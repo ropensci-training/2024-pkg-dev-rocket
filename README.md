@@ -1,6 +1,6 @@
 
 <!-- badges: start -->
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e23de2bd-fbee-4c66-86d0-0a2c2d8d7239/deploy-status)](https://app.netlify.com/sites/rpkgdev-rocket/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e4442a75-400c-45eb-8d44-eeed793d4f28/deploy-status)](https://app.netlify.com/sites/rpkgdev-rocket-2024/deploys)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
