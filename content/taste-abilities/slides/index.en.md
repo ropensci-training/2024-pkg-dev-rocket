@@ -7,7 +7,7 @@ layout: list
 weight: 11
 output: hugodown::md_document
 countdown: true
-rmd_hash: 7ea0983666082ee6
+rmd_hash: 038d36d2980fad7e
 
 ---
 
@@ -73,11 +73,7 @@ I'll present a collection of very useful things I've learnt over the past few ye
 
 After each section I'll summarize and ask you to comment.
 
-Then you pick up one thing to improve in your package, and open a PR.
-
-Then another short slidedeck.
-
-Then you get to review someone else's PR!
+Then you pick up one thing to improve in your package.
 
 ------------------------------------------------------------------------
 
@@ -87,7 +83,7 @@ Then you get to review someone else's PR!
 
 ### Nice messages
 
-Get to know the [cli package](https://cli.r-lib.org/reference/index.html)
+Get to know the [cli package](https://blog.r-hub.io/2023/11/30/cliff-notes-about-cli/)
 
 <div class="highlight">
 
@@ -108,7 +104,7 @@ How to control verbosity? How to shup your package up?
 
 -   argument in each function :weary:
 
--   global option à la `usethis.quiet`
+-   [global option à la `usethis.quiet`](https://ropensci.org/blog/2024/02/06/verbosity-control-packages/)
 
 <div class="highlight">
 
@@ -124,7 +120,7 @@ How to control verbosity? How to shup your package up?
 
 ### Nice messages
 
-Further reading: <https://github.com/ropensci/dev_guide/issues/603>
+Further reading: <https://ropensci.org/blog/2024/02/06/verbosity-control-packages/>
 
 *:toolbox: Are there messages in your package you could improve?*
 
@@ -298,7 +294,42 @@ Please post in the chat
 
 ------------------------------------------------------------------------
 
-### Code as simple as possible: early returns
+### Code as simple as possible: `switch()`
+
+:eyes:
+
+<div class="highlight">
+
+<pre class='chroma'><code class='language-r' data-lang='r'><span><span class='kr'>if</span> <span class='o'>(</span><span class='nv'>type</span> <span class='o'>==</span> <span class='s'>"mean"</span><span class='o'>)</span> <span class='o'>&#123;</span></span>
+<span>  <span class='nf'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='o'>(</span><span class='nv'>x</span><span class='o'>)</span></span>
+<span><span class='o'>&#125;</span> <span class='kr'>else</span> <span class='kr'>if</span> <span class='o'>(</span><span class='nv'>type</span> <span class='o'>==</span> <span class='s'>"median"</span><span class='o'>)</span> <span class='o'>&#123;</span></span>
+<span>  <span class='nf'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='o'>(</span><span class='nv'>x</span><span class='o'>)</span></span>
+<span><span class='o'>&#125;</span> <span class='kr'>else</span> <span class='kr'>if</span> <span class='o'>(</span><span class='nv'>type</span> <span class='o'>==</span> <span class='s'>"trimmed"</span><span class='o'>)</span> <span class='o'>&#123;</span></span>
+<span>  <span class='nf'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='o'>(</span><span class='nv'>x</span>, trim <span class='o'>=</span> <span class='m'>.1</span><span class='o'>)</span></span>
+<span><span class='o'>&#125;</span></span></code></pre>
+
+</div>
+
+------------------------------------------------------------------------
+
+### Code as simple as possible: `switch()`
+
+:sparkles:
+
+<div class="highlight">
+
+<pre class='chroma'><code class='language-r' data-lang='r'><span><span class='kr'><a href='https://rdrr.io/r/base/switch.html'>switch</a></span><span class='o'>(</span><span class='nv'>type</span>,</span>
+<span>  mean <span class='o'>=</span> <span class='nf'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='o'>(</span><span class='nv'>x</span><span class='o'>)</span>,</span>
+<span>  median <span class='o'>=</span> <span class='nf'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='o'>(</span><span class='nv'>x</span><span class='o'>)</span>,</span>
+<span>  trimmed <span class='o'>=</span> <span class='nf'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='o'>(</span><span class='nv'>x</span>, trim <span class='o'>=</span> <span class='m'>.1</span><span class='o'>)</span></span>
+<span><span class='o'>)</span></span>
+<span></span></code></pre>
+
+</div>
+
+------------------------------------------------------------------------
+
+### Code as simple as possible: logic
 
 Further reading: [Code Smells and Feels](https://github.com/jennybc/code-smells-and-feels) by Jenny Bryan
 
@@ -459,7 +490,7 @@ Let's explore <https://github.com/maelle/swamp>
 
 ------------------------------------------------------------------------
 
-### Escape hatches
+### Mocking
 
 My code
 
@@ -484,26 +515,7 @@ How to test for the message?
 
 ------------------------------------------------------------------------
 
-### Escape hatch
-
-Let's add a switch/escape hatch
-
-<div class="highlight">
-
-<pre class='chroma'><code class='language-r' data-lang='r'><span><span class='nv'>is_internet_down</span> <span class='o'>&lt;-</span> <span class='kr'>function</span><span class='o'>(</span><span class='o'>)</span> <span class='o'>&#123;</span></span>
-<span></span>
-<span>  <span class='kr'>if</span> <span class='o'>(</span><span class='nf'><a href='https://rdrr.io/r/base/nchar.html'>nzchar</a></span><span class='o'>(</span><span class='nf'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='o'>(</span><span class='s'>"TESTPKG.NOINTERNET"</span><span class='o'>)</span><span class='o'>)</span><span class='o'>)</span> <span class='o'>&#123;</span></span>
-<span>    <span class='kr'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='o'>(</span><span class='kc'>TRUE</span><span class='o'>)</span></span>
-<span>  <span class='o'>&#125;</span></span>
-<span></span>
-<span>  <span class='o'>!</span><span class='nf'>curl</span><span class='nf'>::</span><span class='nf'><a href='https://rdrr.io/pkg/curl/man/nslookup.html'>has_internet</a></span><span class='o'>(</span><span class='o'>)</span></span>
-<span><span class='o'>&#125;</span></span></code></pre>
-
-</div>
-
-------------------------------------------------------------------------
-
-### Escape hatches
+### Mocking
 
 In the test,
 
@@ -512,7 +524,7 @@ In the test,
 <pre class='chroma'><code class='language-r' data-lang='r'><span></span>
 <span></span>
 <span><span class='nf'>test_that</span><span class='o'>(</span><span class='s'>"my_complicated_code() notes the absence of internet"</span>, <span class='o'>&#123;</span></span>
-<span>  <span class='nf'>withr</span><span class='nf'>::</span><span class='nf'><a href='https://withr.r-lib.org/reference/with_envvar.html'>local_envvar</a></span><span class='o'>(</span><span class='s'>"TESTPKG.NOINTERNET"</span> <span class='o'>=</span> <span class='s'>"blop"</span><span class='o'>)</span></span>
+<span>  <span class='nf'>local_mocked_bindings</span><span class='o'>(</span>is_internet_down <span class='o'>=</span> <span class='kr'>function</span><span class='o'>(</span><span class='nv'>...</span><span class='o'>)</span> <span class='kc'>TRUE</span><span class='o'>)</span></span>
 <span>  <span class='nf'>expect_message</span><span class='o'>(</span><span class='nf'>my_complicated_code</span><span class='o'>(</span><span class='o'>)</span>, <span class='s'>"No internet"</span><span class='o'>)</span></span>
 <span><span class='o'>&#125;</span><span class='o'>)</span></span>
 <span></span>
@@ -522,13 +534,13 @@ In the test,
 
 ------------------------------------------------------------------------
 
-### Escape hatches
+### Mocking
 
-Further reading: <https://blog.r-hub.io/2023/01/23/code-switch-escape-hatch-test/>
+Further reading: <https://www.tidyverse.org/blog/2023/10/testthat-3-2-0/#mocking>
 
 ------------------------------------------------------------------------
 
-### Escape hatches
+### Mocking
 
 *:toolbox: do you have such a situation to test?*
 
@@ -539,7 +551,7 @@ Further reading: <https://blog.r-hub.io/2023/01/23/code-switch-escape-hatch-test
 -   DAMP & DRY
 -   Test code vs code
 -   Ideal tests (self contained, can be run interactively, no leak)
--   Escape hatches
+-   Mocking
 
 Please post in the chat
 
@@ -553,7 +565,17 @@ Please post in the chat
 
 ...with your own package! In breakout rooms.
 
-:warning: Make Pull Requests and don't merge them yet! :warning:
-
 We'll gather in XX minutes as a group to discuss.
+
+------------------------------------------------------------------------
+
+## Back from the adventure
+
+Comments? Questions?
+
+------------------------------------------------------------------------
+
+## Thank you!
+
+See you in the `#package-maintenance` channel? :wink:
 

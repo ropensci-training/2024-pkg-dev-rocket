@@ -98,11 +98,7 @@ I'll present a collection of very useful things I've learnt over the past few ye
 
 After each section I'll summarize and ask you to comment.
 
-Then you pick up one thing to improve in your package, and open a PR.
-
-Then another short slidedeck.
-
-Then you get to review someone else's PR!
+Then you pick up one thing to improve in your package.
 
 ---
 
@@ -112,7 +108,7 @@ Then you get to review someone else's PR!
 
 ### Nice messages
 
-Get to know the [cli package](https://cli.r-lib.org/reference/index.html)
+Get to know the [cli package](https://blog.r-hub.io/2023/11/30/cliff-notes-about-cli/)
 
 ```{r}
 variable <- 42
@@ -129,7 +125,7 @@ How to control verbosity? How to shup your package up?
 
 - argument in each function :weary:
 
-- global option à la `usethis.quiet`
+- [global option à la `usethis.quiet`](https://ropensci.org/blog/2024/02/06/verbosity-control-packages/)
 
 ```{r, eval=FALSE}
 cli_alert_info <- function(...) {
@@ -143,7 +139,7 @@ cli_alert_info <- function(...) {
 
 ### Nice messages
 
-Further reading: https://github.com/ropensci/dev_guide/issues/603
+Further reading: https://ropensci.org/blog/2024/02/06/verbosity-control-packages/
 
 _:toolbox: Are there messages in your package you could improve?_
 
@@ -310,7 +306,39 @@ do_this <- function() {
 
 ---
 
-### Code as simple as possible: early returns
+### Code as simple as possible: `switch()`
+
+:eyes:
+
+```{r, eval=FALSE}
+if (type == "mean") {
+  mean(x)
+} else if (type == "median") {
+  median(x)
+} else if (type == "trimmed") {
+  mean(x, trim = .1)
+}
+```
+
+---
+
+### Code as simple as possible: `switch()`
+
+:sparkles:
+
+```{r, eval=FALSE}
+switch(type,
+  mean = mean(x),
+  median = median(x),
+  trimmed = mean(x, trim = .1)
+)
+
+```
+
+
+---
+
+### Code as simple as possible: logic
 
 Further reading: [Code Smells and Feels](https://github.com/jennybc/code-smells-and-feels) by Jenny Bryan
 
@@ -470,7 +498,7 @@ _:toolbox: Do some of your tests have top-level code? Can you create helper file
 
 ---
 
-### Escape hatches
+### Mocking
 
 My code
 
@@ -493,24 +521,7 @@ How to test for the message?
 
 ---
 
-### Escape hatch
-
-Let's add a switch/escape hatch
-
-```{r, eval=FALSE}
-is_internet_down <- function() {
-
-  if (nzchar(Sys.getenv("TESTPKG.NOINTERNET"))) {
-    return(TRUE)
-  }
-
-  !curl::has_internet()
-}
-```
-
----
-
-### Escape hatches
+### Mocking
 
 In the test,
 
@@ -518,7 +529,7 @@ In the test,
 
 
 test_that("my_complicated_code() notes the absence of internet", {
-  withr::local_envvar("TESTPKG.NOINTERNET" = "blop")
+  local_mocked_bindings(is_internet_down = function(...) TRUE)
   expect_message(my_complicated_code(), "No internet")
 })
 
@@ -527,13 +538,13 @@ test_that("my_complicated_code() notes the absence of internet", {
 
 ---
 
-### Escape hatches
+### Mocking
 
-Further reading: https://blog.r-hub.io/2023/01/23/code-switch-escape-hatch-test/
+Further reading: https://www.tidyverse.org/blog/2023/10/testthat-3-2-0/#mocking
 
 ---
 
-### Escape hatches
+### Mocking
 
 _:toolbox: do you have such a situation to test?_
 
@@ -544,7 +555,7 @@ _:toolbox: do you have such a situation to test?_
 - DAMP & DRY
 - Test code vs code
 - Ideal tests (self contained, can be run interactively, no leak)
-- Escape hatches
+- Mocking
 
 Please post in the chat
 
@@ -558,6 +569,16 @@ Please post in the chat
 
 ...with your own package! In breakout rooms.
 
-:warning: Make Pull Requests and don't merge them yet! :warning:
-
 We'll gather in XX minutes as a group to discuss.
+
+---
+
+## Back from the adventure
+
+Comments? Questions?
+
+---
+
+## Thank you!
+
+See you in the `#package-maintenance` channel? :wink:
