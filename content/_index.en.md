@@ -4,7 +4,7 @@ title: "Package Development: Not Rocket Science"
 
 # Package Development: Not Rocket Science
 
-> March 2023
+> March 2024
 > [rOpenSci Champions Program](https://ropensci.org/champions/)
 
 Workshop for R users who've already developped or contributed to packages.

@@ -92,7 +92,9 @@ Get to know the [cli package](https://cli.r-lib.org/reference/index.html)
 <div class="highlight">
 
 <pre class='chroma'><code class='language-r' data-lang='r'><span><span class='nv'>variable</span> <span class='o'>&lt;-</span> <span class='m'>42</span></span>
-<span><span class='nf'>cli</span><span class='nf'>::</span><span class='nf'><a href='https://cli.r-lib.org/reference/cli_alert.html'>cli_alert_info</a></span><span class='o'>(</span><span class='s'>"Set &#123;.field parameter&#125; to &#123;.val &#123;variable&#125;&#125;"</span><span class='o'>)</span></span><span><span class='c'>#&gt; <span style='color: #00BBBB;'>ℹ</span> Set <span style='color: #00BB00;'>parameter</span> to <span style='color: #0000BB;'>42</span></span></span></code></pre>
+<span><span class='nf'>cli</span><span class='nf'>::</span><span class='nf'><a href='https://cli.r-lib.org/reference/cli_alert.html'>cli_alert_info</a></span><span class='o'>(</span><span class='s'>"Set &#123;.field parameter&#125; to &#123;.val &#123;variable&#125;&#125;"</span><span class='o'>)</span></span>
+<span><span class='c'>#&gt; <span style='color: #00BBBB;'>ℹ</span> Set <span style='color: #00BB00;'>parameter</span> to <span style='color: #0000BB;'>42</span></span></span>
+<span></span></code></pre>
 
 </div>
 
@@ -141,9 +143,11 @@ Further reading: <https://github.com/ropensci/dev_guide/issues/603>
 <span>    <span class='s'>"Can't find good error message."</span>,</span>
 <span>    i <span class='o'>=</span> <span class='s'>"Read the tidyverse style guide."</span></span>
 <span>  <span class='o'>)</span></span>
-<span><span class='o'>)</span></span><span><span class='c'>#&gt; <span style='color: #BBBB00; font-weight: bold;'>Error</span><span style='font-weight: bold;'>:</span></span></span>
+<span><span class='o'>)</span></span>
+<span><span class='c'>#&gt; <span style='color: #BBBB00; font-weight: bold;'>Error</span><span style='font-weight: bold;'>:</span></span></span>
 <span><span class='c'>#&gt; <span style='color: #BBBB00;'>!</span> Can't find good error message.</span></span>
-<span><span class='c'>#&gt; <span style='color: #00BBBB;'>ℹ</span> Read the tidyverse style guide.</span></span></code></pre>
+<span><span class='c'>#&gt; <span style='color: #00BBBB;'>ℹ</span> Read the tidyverse style guide.</span></span>
+<span></span></code></pre>
 
 </div>
 
@@ -349,7 +353,8 @@ At least in RStudio IDE, outline on the right. In any case good to indicate high
 more code
 
 ## Header level 2 ----
-more code</code></pre>
+more code
+</code></pre>
 
 </div>
 

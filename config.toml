@@ -1,4 +1,4 @@
-baseURL = "https://rpkgdev-rocket.netlify.app/"
+baseURL = "https://rpkgdev-rocket-2024.netlify.app/"
 languageCode = "en-US"
 defaultContentLanguage = "en"
 title = "Package Development: Not Rocket Science"
@@ -33,10 +33,6 @@ identifier = "ds"
 url = "https://github.com/maelle/2023-pkg-dev-rocket"
 weight = 10
 
-[[Languages.en.menu.shortcuts]]
-name = "<i class='far fa-fw fa-copy'></i> Snippets"
-url = "/snippets"
-weight = 20
 
 [[Languages.en.menu.shortcuts]]
 name = "<i class='fas fa-fw fa-bullhorn'></i> Credits"
@@ -49,7 +45,7 @@ url = "https://creativecommons.org/licenses/by/4.0/"
 weight = 40
 
 [params]
-  editURL = "https://github.com/maelle/2023-pkg-dev-rocket/edit/main/content/"
+  editURL = "https://github.com/ropensci-training/2024-pkg-dev-rocket/edit/main/content/"
   description = "Package Development: Not Rocket Science"
   author = "Maëlle Salmon"
   showVisitedLinks = true
