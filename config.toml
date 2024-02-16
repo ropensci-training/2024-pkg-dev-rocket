@@ -30,7 +30,7 @@ languageName = "English"
 [[Languages.en.menu.shortcuts]]
 name = "<i class='fab fa-fw fa-github'></i> GitHub repo"
 identifier = "ds"
-url = "https://github.com/maelle/2023-pkg-dev-rocket"
+url = "https://github.com/ropensci-training/2024-pkg-dev-rocket"
 weight = 10
 
 
