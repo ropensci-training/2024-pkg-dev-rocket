@@ -1,0 +1,563 @@
+---
+outputs:
+- Reveal
+title: Better packages
+hidden: true
+layout: list
+weight: 11
+output: hugodown::md_document
+countdown: true
+---
+
+# Better packages
+
+```{r, echo=FALSE}
+asciicast::init_knitr_engine(
+  echo = TRUE,
+  echo_input = FALSE,
+  startup = quote({
+    library(cli)
+  })
+)
+library("magrittr")
+get_pic <- function(id, alt, width) {
+  
+  info <- httr::GET(
+    paste0("https://api.pexels.com/v1/photos/", id),
+    httr::add_headers(Authorization = Sys.getenv("PEXELS_KEY"))
+  ) %>%
+    httr::content()
+  download.file(info$src$large, paste0(id, ".jpeg"))
+  cat("```{=html}\n")
+cat(paste0('{', '{< figure src="',
+paste0(id, ".jpeg"),
+'" alt="',
+alt,
+'" caption="Picture by [',
+info$photographer,
+' on Pexels](',
+info$url,
+')." width="',
+width , '" >}', '}'))
+cat("\n```\n")
+}
+```
+
+```{r red, results="asis", cache=TRUE, echo=FALSE}
+get_pic(id = 3697811, alt = "Red rocket ship", 250)
+```
+
+
+---
+
+## My R package development creds
+
+I really :heart: R package development
+
+* Volunteer editor for [rOpenSci Software Peer Review](https://ropensci.org/software-review).
+
+* At work, maintenance of [rOpenSci dev guide](https://devguide.ropensci.org).
+
+* Created the [R-hub blog](https://blog.r-hub.io).
+
+* Worked on the [HTTP testing in R](https://books.ropensci.org/http-testing/) book.
+
+---
+
+## My R package development creds
+
+Contributed to
+
+* [pkgdown 2.0.0](https://www.tidyverse.org/blog/2021/12/pkgdown-2-0-0/) (to produce documentation websites for packages)
+
+* [fledge 0.1.0](https://cynkra.github.io/fledge/) (Smoother change tracking and versioning for R packages)
+
+* [glitter 0.1.0](https://lvaudor.github.io/glitter/) (a SPARQL domain-specific language)
+
+---
+
+## What is good code
+
+> The only way to write good code is to write tons of shitty code first. Feeling shame about bad code stops you from getting to good code
+
+[Hadley Wickham's 2015 tweet](https://twitter.com/hadleywickham/status/589068687669243905)
+
+---
+
+## What is good code?
+
+> If you’re an experienced programmer and you’re tempted to code-shame someone, try thinking back to your own million lines of bad code. Imagine someone had mocked you then (...). Would you have continued asking for help? Would you have ever gotten through your million lines?
+
+David Robinson's blog post ["A Million Lines of Bad Code"](http://varianceexplained.org/programming/bad-code/)
+
+---
+
+## Today's workshop
+
+I'll present a collection of very useful things I've learnt over the past few years.
+
+After each section I'll summarize and ask you to comment.
+
+Then you pick up one thing to improve in your package, and open a PR.
+
+Then another short slidedeck.
+
+Then you get to review someone else's PR!
+
+---
+
+## Interface
+
+---
+
+### Nice messages
+
+Get to know the [cli package](https://cli.r-lib.org/reference/index.html)
+
+```{r}
+variable <- 42
+cli::cli_alert_info("Set {.field parameter} to {.val {variable}}")
+```
+
+[Vignette to migrate from usethis::ui functions to cli](https://cli.r-lib.org/articles/usethis-ui.html)
+
+---
+
+### Nice messages
+
+How to control verbosity? How to shup your package up?
+
+- argument in each function :weary:
+
+- global option à la `usethis.quiet`
+
+```{r, eval=FALSE}
+cli_alert_info <- function(...) {
+  if (!getOption("usethis.quiet", default = FALSE)) {
+    cli::cli_alert_info(...)
+  }
+}
+```
+
+---
+
+### Nice messages
+
+Further reading: https://github.com/ropensci/dev_guide/issues/603
+
+_:toolbox: Are there messages in your package you could improve?_
+
+---
+
+### Error messages
+
+* Tips on content in the [tidyverse style guide](https://style.tidyverse.org/error-messages.html) with examples. 
+
+* Interface with `cli::cli_abort()`
+
+```{r, error = TRUE}
+cli::cli_abort(
+  c(
+    "Can't find good error message.",
+    i = "Read the tidyverse style guide."
+  )
+)
+
+```
+
+---
+
+### Error messages
+
+_:toolbox: Go through your package's error messages (look for `stop()` and equivalents). Could some of them be improved by applying the tidyverse guidance?_
+
+---
+
+### Argument checks
+
+* Document argument type, default.
+
+* Check arguments. `rlang::arg_match()` for instance.
+
+Further reading: [Checking the inputs of your R functions](https://blog.r-hub.io/2022/03/10/input-checking/) by Hugo Gruson , Sam Abbott , Carl Pearson.
+
+---
+
+### Arguments checks
+
+_:toolbox: Does your package document and validate arguments? Improve this in one function._
+
+---
+
+## Interface :microphone: `stop()` :microphone:
+
+- Nice messages with {cli}.
+- Error messages with {cli}, tidyverse style guide.
+- Argument checks with rlang, R-hub blog post.
+
+Please post in the chat
+
+- Something you found interesting!
+- Something you disagreed with!
+- A recent good/bad experience with these tools?
+
+---
+
+## Less code or less headaches
+
+---
+
+### Weigh your dependencies
+
+Does this dependency spark joy? :wink:
+
+- A dependency is code that someone else carefully crafted and tested!
+- A dependency is a failure point.
+
+Further reading: [Dependencies: Mindset and Background](https://r-pkgs.org/dependencies-mindset-background.html) in the R Packages book by Hadley Wickham and Jenny Bryan.
+
+---
+
+### Weigh your dependencies
+
+In [rOpenSci dev guide](https://devguide.ropensci.org/building.html#recommended-scaffolding)
+
+- curl, httr2, httr. Not RCurl.
+
+- jsonlite. Not rjson nor RJSONIO.
+
+- xml2. Not XML
+
+- sf, spatial suites developed by the r-spatial and rspatial communities. Not sp, rgdal, maptools, rgeos.
+
+---
+
+### Weigh your dependencies
+
+_:toolbox: Are there dependencies you could add, replace or remove in your package?_
+
+---
+
+### Less code? Beyond using dependencies
+
+Feature creep: "excessive ongoing expansion or addition of new features in a product" https://en.wikipedia.org/wiki/Feature_creep
+
+Okay to split the package.
+
+Okay to say no to feature requests. [Example](https://github.com/r-lib/pkgdown/issues/1430#issuecomment-924268834)
+
+---
+
+### Less code
+
+_:toolbox: Are there feature requests you'd like to say no to? Save answer as [GitHub reply](https://docs.github.com/en/get-started/writing-on-github/working-with-saved-replies/creating-a-saved-reply)?_
+
+---
+
+## Less code :microphone: `stop()` :microphone:
+
+- Choosing dependencies.
+- Dependencies to avoid.
+- Defining package scope.
+
+Please post in the chat
+
+- Something you found interesting!
+- Something you disagreed with!
+- A recent good/bad experience with these tools?
+
+---
+
+
+## Code
+
+
+---
+
+### Code as simple as possible: early returns
+
+:eyes:
+
+```{r, eval = FALSE}
+do_this <- function() {
+  if (!is_that_present()) {
+    return(NULL)
+  } else {
+    # more code
+    return(blip)
+  }
+}
+
+```
+
+---
+
+### Code as simple as possible: early returns
+
+:sparkles:
+
+```{r, eval = FALSE}
+do_this <- function() {
+  if (!is_that_present()) {
+    return(NULL)
+  } 
+  # more code
+  
+  blip
+}
+
+```
+
+---
+
+### Code as simple as possible: early returns
+
+Further reading: [Code Smells and Feels](https://github.com/jennybc/code-smells-and-feels) by Jenny Bryan
+
+_:toolbox: Look at logic in one or a few functions. Could you simplify it with early returns, helper functions?_
+
+---
+
+### Code aesthetics
+
+Some of it only relevant if you see code.
+
+* Use alignment?
+* Use paragraphs
+* Use "header" comments for navigation.
+
+---
+
+#### Code alignment
+
+* Align argument in function definitions.
+
+* More vertical alignment? I am not sensitive to it. :innocent:
+
+---
+
+#### Paragraphs
+
+One paragraph = one idea (works for writing prose too!).
+
+Vertical space is costly (what fits on the screen?)
+
+
+```{r, eval = FALSE}
+head <- collect_metadata(website)
+head_string <- stringify(head)
+
+body <- create_content(website)
+body_string <- stringify(body)
+
+```
+
+---
+
+#### Header comments
+
+At least in RStudio IDE, outline on the right.
+In any case good to indicate high-level structure within a script.
+
+```{r, eval = FALSE}
+# Header level 1 ----
+more code
+
+## Header level 2 ----
+more code
+```
+
+---
+
+
+### Code aesthetics
+
+_:toolbox: Open one or a few scripts, can you improve the aesthetics?_
+
+---
+
+
+### Less comments / self explaining code
+
+Comments are like little alerts. Don't create fatigue!
+
+Comments that repeat the code get out of date.
+
+---
+
+### Less comments / self explaining code
+
+```r
+# use only non empty strings
+if (!is.na(x) && nzchar(x)) {
+  use_string(x)
+}
+```
+
+---
+
+### Less comments / self explaining code
+
+```r
+is_non_empty_string <- function(x) {
+  !is.na(x) && nzchar(x)
+}
+
+if (is_non_empty_string(x)) {
+  use_string(x)
+}
+```
+
+---
+
+### Less comments / self-explaining code
+
+Further reading: https://blog.r-hub.io/2023/01/26/code-comments-self-explaining-code/
+
+_:toolbox: Are there opportunities for less comments (or more comments!) in some of your scripts?_
+
+---
+
+## Code :microphone: `stop()` :microphone:
+
+- Early returns.
+- Code aesthetics.
+- Less comments/self-explaining code.
+
+Please post in the chat
+
+- Something you found interesting!
+- Something you disagreed with!
+- A recent good/bad experience with these tools?
+
+---
+
+## Test code
+
+---
+
+### DAMP / DRY
+
+DAMP: descriptive and meaningful.
+
+DRY: don't repeat yourself.
+
+A trade-off!
+
+---
+
+### Test code vs code
+
+Code is covered by test code so we can take more risks!
+
+---
+
+### Ideal tests
+
+- Self-contained.
+
+- Can be run interactively. `testthat::test_path()`.
+
+- No leak. {withr}. `withr::local_options()`, `withr::local_tempdir()`...
+
+---
+
+### Example: {swamp}
+
+Let's explore https://github.com/maelle/swamp
+
+_:toolbox: Do some of your tests have top-level code? Can you create helper files and helper functions, and repeat object creation in each test?_
+
+---
+
+### Escape hatches
+
+My code
+
+```{r, eval = FALSE}
+
+
+is_internet_down <- function() {
+  !curl::has_internet()
+}
+
+my_complicated_code <- function() {
+  if (is_internet_down()) {
+    message("No internet! Le sigh")
+  }
+  # blablablabla
+}
+```
+
+How to test for the message?
+
+---
+
+### Escape hatch
+
+Let's add a switch/escape hatch
+
+```{r, eval=FALSE}
+is_internet_down <- function() {
+
+  if (nzchar(Sys.getenv("TESTPKG.NOINTERNET"))) {
+    return(TRUE)
+  }
+
+  !curl::has_internet()
+}
+```
+
+---
+
+### Escape hatches
+
+In the test,
+
+```{r, eval=FALSE}
+
+
+test_that("my_complicated_code() notes the absence of internet", {
+  withr::local_envvar("TESTPKG.NOINTERNET" = "blop")
+  expect_message(my_complicated_code(), "No internet")
+})
+
+
+```
+
+---
+
+### Escape hatches
+
+Further reading: https://blog.r-hub.io/2023/01/23/code-switch-escape-hatch-test/
+
+---
+
+### Escape hatches
+
+_:toolbox: do you have such a situation to test?_
+
+---
+
+## Test code :microphone: `stop()` :microphone:
+
+- DAMP & DRY
+- Test code vs code
+- Ideal tests (self contained, can be run interactively, no leak)
+- Escape hatches
+
+Please post in the chat
+
+- Something you found interesting!
+- Something you disagreed with!
+- A recent good/bad experience with these tools?
+
+---
+
+## Choose your own adventure
+
+...with your own package! In breakout rooms.
+
+:warning: Make Pull Requests and don't merge them yet! :warning:
+
+We'll gather in XX minutes as a group to discuss.
