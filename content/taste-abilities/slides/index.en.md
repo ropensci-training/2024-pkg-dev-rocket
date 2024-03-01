@@ -7,7 +7,7 @@ layout: list
 weight: 11
 output: hugodown::md_document
 countdown: true
-rmd_hash: 038d36d2980fad7e
+rmd_hash: 8aa9e6cdde052c26
 
 ---
 
@@ -55,7 +55,7 @@ Contributed to
 
 > The only way to write good code is to write tons of shitty code first. Feeling shame about bad code stops you from getting to good code
 
-[Hadley Wickham's 2015 tweet](https://twitter.com/hadleywickham/status/589068687669243905)
+[Hadley Wickham's toot](https://fosstodon.org/@hadleywickham/112021309035884210)
 
 ------------------------------------------------------------------------
 
